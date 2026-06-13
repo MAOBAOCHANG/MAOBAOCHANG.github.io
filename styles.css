@@ -77,68 +77,16 @@ body {
     line-height: 1.7;
     transition: background-color 0.4s ease, color 0.4s ease;
     overflow-x: hidden;
-    cursor: none;
 }
 
 a {
     text-decoration: none;
     color: inherit;
-    cursor: none;
 }
 
 img {
     max-width: 100%;
     display: block;
-}
-
-/* --- 自定义光标 --- */
-.cursor {
-    width: 8px;
-    height: 8px;
-    background: var(--text-primary);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease, background 0.3s ease;
-    display: block;
-}
-
-.cursor-follower {
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid var(--text-secondary);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition: transform 0.25s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease;
-    display: block;
-}
-
-.cursor.hover {
-    transform: scale(2);
-    background: var(--accent);
-}
-
-.cursor-follower.hover {
-    transform: scale(1.5);
-    border-color: var(--accent);
-    width: 24px;
-    height: 24px;
-}
-
-/* 移动端隐藏光标 */
-@media (max-width: 768px) {
-    body {
-        cursor: auto !important;
-    }
-    .cursor, .cursor-follower {
-        display: none !important;
-    }
-    a, button, .btn, .filter-btn, .work-card {
-        cursor: pointer;
-    }
 }
 
 /* --- 导航栏 --- */
