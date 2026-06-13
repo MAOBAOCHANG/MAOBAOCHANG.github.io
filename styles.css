@@ -77,16 +77,43 @@ body {
     line-height: 1.7;
     transition: background-color 0.4s ease, color 0.4s ease;
     overflow-x: hidden;
+    cursor: none;
 }
 
 a {
     text-decoration: none;
     color: inherit;
+    cursor: none;
 }
 
 img {
     max-width: 100%;
     display: block;
+}
+
+/* --- 纸飞机光标 --- */
+.cursor-plane {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    color: var(--text-primary);
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.25));
+    transition: transform 0.05s linear;
+    will-change: transform;
+    display: none;
+}
+
+.cursor-plane.visible {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    body, a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card, .theme-toggle, .nav-link {
+        cursor: auto !important;
+    }
+    .cursor-plane {
+        display: none !important;
+    }
 }
 
 /* --- 导航栏 --- */

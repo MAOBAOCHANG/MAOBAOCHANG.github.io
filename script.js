@@ -148,57 +148,47 @@ document.addEventListener('DOMContentLoaded', () => {
     initWorkModal();
 });
 
-/* --- 自定义光标 --- */
+/* --- 纸飞机光标 --- */
 function initCursor() {
-    const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
-    
-    if (!cursor || !follower) return;
+    const plane = document.getElementById('cursorPlane');
+    if (!plane) return;
 
-    // 显示光标
-    cursor.style.display = 'block';
-    follower.style.display = 'block';
-    
     let mouseX = 0, mouseY = 0;
-    let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
-    let followerX = window.innerWidth / 2, followerY = window.innerHeight / 2;
+    let planeX = window.innerWidth / 2, planeY = window.innerHeight / 2;
+    let prevX = window.innerWidth / 2, prevY = window.innerHeight / 2;
+    let angle = 0;
 
     // 隐藏默认光标
     document.body.style.cursor = 'none';
-    const interactiveEls = document.querySelectorAll('a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card');
-    interactiveEls.forEach(el => {
-        el.style.cursor = 'none';
-    });
+    const interactiveEls = document.querySelectorAll('a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card, .theme-toggle, .nav-link');
+    interactiveEls.forEach(el => { el.style.cursor = 'none'; });
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        if (!plane.classList.contains('visible')) {
+            plane.classList.add('visible');
+        }
     });
 
-    // 可交互元素悬停效果
-    interactiveEls.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-            follower.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-            follower.classList.remove('hover');
-        });
-    });
+    document.addEventListener('mouseleave', () => { plane.classList.remove('visible'); });
+    document.addEventListener('mouseenter', () => { plane.classList.add('visible'); });
 
     function animate() {
-        // 光标小球：快速跟随
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        cursor.style.left = cursorX - 4 + 'px';
-        cursor.style.top = cursorY - 4 + 'px';
+        // 平滑跟随
+        planeX += (mouseX - planeX) * 0.15;
+        planeY += (mouseY - planeY) * 0.15;
 
-        // 光标跟随圈：缓慢跟随
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-        follower.style.left = followerX - 16 + 'px';
-        follower.style.top = followerY - 16 + 'px';
+        // 根据移动方向计算旋转角度
+        const dx = mouseX - prevX;
+        const dy = mouseY - prevY;
+        if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+            angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        }
+        prevX = mouseX;
+        prevY = mouseY;
+
+        plane.style.transform = 'translate(' + (planeX - 11) + 'px, ' + (planeY - 11) + 'px) rotate(' + angle + 'deg)';
 
         requestAnimationFrame(animate);
     }
