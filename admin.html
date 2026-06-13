@@ -48,6 +48,7 @@
                 <button class="sidebar-btn" data-tab="works">作品管理</button>
                 <button class="sidebar-btn" data-tab="contact">联系信息</button>
                 <button class="sidebar-btn" data-tab="avatar">头像设置</button>
+                <button class="sidebar-btn" data-tab="github">GitHub 部署</button>
                 <button class="sidebar-btn" data-tab="export">导出数据</button>
             </aside>
 
@@ -185,6 +186,31 @@
                         <p class="upload-hint">建议使用正方形照片，尺寸不小于 400×400</p>
                     </div>
                     <button class="btn-save" onclick="saveAvatar()">保存头像</button>
+                </div>
+
+                <!-- GitHub 部署 -->
+                <div class="tab-content" id="tab-github">
+                    <h2>GitHub 部署</h2>
+                    <p class="tab-desc">配置后，后台修改可一键自动部署到 GitHub Pages。</p>
+                    <div class="form-group">
+                        <label>GitHub 用户名</label>
+                        <input type="text" id="github-user" placeholder="MAOBAOCHANG" />
+                    </div>
+                    <div class="form-group">
+                        <label>仓库名称</label>
+                        <input type="text" id="github-repo" placeholder="MAOBAOCHANG.github.io" />
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub Token（需要有 repo 权限）</label>
+                        <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx" />
+                        <p class="upload-hint">Token 仅保存在浏览器本地，不会上传到任何地方。</p>
+                    </div>
+                    <button class="btn-save" onclick="saveGitHubSettings()">保存 GitHub 设置</button>
+                    <hr style="margin:2rem 0;border-color:var(--border);" />
+                    <h3>一键部署</h3>
+                    <p class="tab-desc">点击下方按钮，将当前后台数据自动生成网站并推送到 GitHub。</p>
+                    <button class="btn-deploy" id="btnDeploy" onclick="deployToGitHub()">🚀 部署到 GitHub Pages</button>
+                    <div class="deploy-status" id="deployStatus"></div>
                 </div>
 
                 <!-- 导出数据 -->

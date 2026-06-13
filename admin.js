@@ -565,3 +565,102 @@ function showToast(msg) {
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
 }
+
+// ============ GitHub 部署 ============
+function loadGitHubSettings() {
+    const settings = localStorage.getItem('githubSettings');
+    if (settings) {
+        const s = JSON.parse(settings);
+        setVal('github-user', s.user || '');
+        setVal('github-repo', s.repo || '');
+        setVal('github-token', s.token || '');
+    }
+}
+
+function saveGitHubSettings() {
+    const user = val('github-user').trim();
+    const repo = val('github-repo').trim();
+    const token = val('github-token').trim();
+    if (!user || !repo || !token) {
+        alert('请填写完整的 GitHub 配置信息');
+        return;
+    }
+    localStorage.setItem('githubSettings', JSON.stringify({ user, repo, token }));
+    showToast('GitHub 设置已保存 ✨');
+}
+
+async function deployToGitHub() {
+    const user = val('github-user').trim();
+    const repo = val('github-repo').trim();
+    const token = val('github-token').trim();
+    if (!user || !repo || !token) {
+        alert('请先保存 GitHub 配置信息');
+        return;
+    }
+
+    const statusEl = document.getElementById('deployStatus');
+    const btn = document.getElementById('btnDeploy');
+    btn.disabled = true;
+
+    function setStatus(type, msg) {
+        statusEl.className = 'deploy-status show ' + type;
+        statusEl.textContent = msg;
+    }
+
+    try {
+        setStatus('loading', '⏳ 正在准备部署...');
+
+        // 保存最新数据
+        saveData();
+
+        // 生成 updated index.html
+        const html = generateHTML(siteData);
+
+        // 获取当前文件的 SHA
+        setStatus('loading', '⏳ 正在获取仓库信息...');
+        const getResp = await fetch(
+            'https://api.github.com/repos/' + user + '/' + repo + '/contents/index.html',
+            { headers: { 'Authorization': 'token ' + token } }
+        );
+        let sha = '';
+        if (getResp.ok) {
+            const getData = await getResp.json();
+            sha = getData.sha;
+        }
+
+        // 更新 index.html
+        setStatus('loading', '⏳ 正在上传 index.html...');
+        const updateResp = await fetch(
+            'https://api.github.com/repos/' + user + '/' + repo + '/contents/index.html',
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: '🚀 网站自动更新 ' + new Date().toLocaleString(),
+                    content: btoa(unescape(encodeURIComponent(html))),
+                    sha: sha,
+                    branch: 'main'
+                })
+            }
+        );
+
+        if (!updateResp.ok) {
+            const err = await updateResp.json();
+            throw new Error(err.message || '部署失败');
+        }
+
+        setStatus('success', '✅ 部署成功！GitHub Pages 将在 1-2 分钟内自动更新。\n访问：https://' + (repo === 'MAOBAOCHANG.github.io' ? 'maobaochang.github.io' : user + '.github.io') + '');
+    } catch (e) {
+        setStatus('error', '❌ 部署失败：' + e.message);
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// 初始化时加载 GitHub 设置
+document.addEventListener('DOMContentLoaded', () => {
+    loadGitHubSettings();
+});
