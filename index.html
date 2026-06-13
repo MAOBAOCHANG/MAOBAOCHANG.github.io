@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毛宝昌 · 个人主页</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 自定义光标 -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- 管理入口 - 固定在右下角 -->
+    <a href="admin.html" class="floating-admin-btn" title="管理后台">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+    </a>
+
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">MAO BAO CHANG</a>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">关于</a>
+                <a href="#works" class="nav-link">作品</a>
+                <a href="#contact" class="nav-link">联系</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <a href="admin.html" class="admin-btn" title="管理后台" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span>管理后台</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主视觉区 -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-glow"></div>
+        <div class="hero-content">
+            <p class="hero-greeting">你好，我是</p>
+            <h1 class="hero-title">
+                <span class="hero-name">毛宝昌</span>
+            </h1>
+            <p class="hero-subtitle">
+                <span class="typing-text"></span><span class="typing-cursor">|</span>
+            </p>
+            <p class="hero-desc">
+                热爱创造，专注于打造优雅的数字体验。
+                在代码与设计之间寻找平衡，让每一个像素都有意义。
+            </p>
+            <div class="hero-actions">
+                <a href="#works" class="btn btn-primary">
+                    查看作品
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#contact" class="btn btn-outline">联系我</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-avatar-container">
+                <div class="hero-avatar-ring"></div>
+                <div class="hero-avatar-placeholder">
+                    <span>MBC</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>向下滚动</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section class="about section" id="about">
+        <div class="section-container">
+            <div class="section-label">01</div>
+            <h2 class="section-title">关于我</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        你好！我是<strong>毛宝昌</strong>，一个充满热情的技术创作者。
+                    </p>
+                    <p>
+                        我享受将想法变为现实的过程——无论是开发一个流畅的 Web 应用，
+                        还是设计一个赏心悦目的用户界面。我相信好的作品应该兼顾
+                        <em>形式与功能</em>，在细节中体现用心。
+                    </p>
+                    <p>
+                        在技术飞速迭代的时代，我保持好奇心，持续学习，
+                        致力于打造经得起时间考验的作品。
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="5">0</span>
+                        <span class="stat-label">完成项目</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="3">0</span>
+                        <span class="stat-label">技术方向</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" data-target="100">0</span>
+                        <span class="stat-label">% 热情</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品展示 -->
+    <section class="works section" id="works">
+        <div class="section-container">
+            <div class="section-label">02</div>
+            <h2 class="section-title">我的作品</h2>
+            <p class="section-desc">每一个项目都是一次探索与成长的旅程</p>
+
+            <div class="works-filter">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="web">Web 开发</button>
+                <button class="filter-btn" data-filter="design">设计</button>
+                <button class="filter-btn" data-filter="other">其他</button>
+            </div>
+
+            <div class="works-grid">
+                <!-- 作品 1 -->
+                <article class="work-card" data-category="web">
+                    <div class="work-card-image">
+                        <div class="work-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                <path d="M8 21h8M12 17v4"/>
+                            </svg>
+                        </div>
+                        <div class="work-overlay">
+                            <span class="work-view">查看详情</span>
+                        </div>
+                    </div>
+                    <div class="work-card-info">
+                        <span class="work-tag">Web 开发</span>
+                        <h3 class="work-title">个人品牌网站</h3>
+                        <p class="work-desc">极简风格的个人主页，支持暗色模式与响应式布局，注重交互动效与用户体验。</p>
+                        <div class="work-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 作品 2 -->
+                <article class="work-card" data-category="web">
+                    <div class="work-card-image">
+                        <div class="work-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                                <line x1="4" y1="22" x2="4" y2="15"/>
+                            </svg>
+                        </div>
+                        <div class="work-overlay">
+                            <span class="work-view">查看详情</span>
+                        </div>
+                    </div>
+                    <div class="work-card-info">
+                        <span class="work-tag">Web 开发</span>
+                        <h3 class="work-title">创意作品集</h3>
+                        <p class="work-desc">交互式作品展示平台，使用流畅的过渡动画与网格布局，让作品呈现更具视觉冲击力。</p>
+                        <div class="work-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 作品 3 -->
+                <article class="work-card" data-category="design">
+                    <div class="work-card-image">
+                        <div class="work-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6"/>
+                                <circle cx="12" cy="12" r="2"/>
+                            </svg>
+                        </div>
+                        <div class="work-overlay">
+                            <span class="work-view">查看详情</span>
+                        </div>
+                    </div>
+                    <div class="work-card-info">
+                        <span class="work-tag">设计</span>
+                        <h3 class="work-title">UI 设计系统</h3>
+                        <p class="work-desc">一套简洁统一的组件设计规范，包含配色方案、字体层级与间距系统，确保视觉一致性。</p>
+                        <div class="work-tech">
+                            <span>Figma</span>
+                            <span>Design System</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 作品 4 -->
+                <article class="work-card" data-category="other">
+                    <div class="work-card-image">
+                        <div class="work-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </div>
+                        <div class="work-overlay">
+                            <span class="work-view">查看详情</span>
+                        </div>
+                    </div>
+                    <div class="work-card-info">
+                        <span class="work-tag">其他</span>
+                        <h3 class="work-title">创意实验</h3>
+                        <p class="work-desc">探索前沿技术的实验性项目，不断尝试新的交互方式与视觉表达，突破常规边界。</p>
+                        <div class="work-tech">
+                            <span>实验</span>
+                            <span>创意</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 作品 5 (可扩展) -->
+                <article class="work-card work-card-empty" data-category="web">
+                    <div class="work-card-image">
+                        <div class="work-placeholder add-new">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 8v8M8 12h8"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="work-card-info">
+                        <span class="work-tag">敬请期待</span>
+                        <h3 class="work-title">你的下一个项目</h3>
+                        <p class="work-desc">新的作品正在酝酿中，敬请期待。你也可以联系我一起合作。</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我 -->
+    <section class="contact section" id="contact">
+        <div class="section-container">
+            <div class="section-label">03</div>
+            <h2 class="section-title">联系我</h2>
+            <p class="section-desc">有项目合作的想法？欢迎随时联系</p>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <h3>邮箱</h3>
+                    <a href="mailto:3029449682@qq.com">3029449682@qq.com</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                    </div>
+                    <h3>微信</h3>
+                    <span>13321349516</span>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                    </div>
+                    <h3>GitHub</h3>
+                    <a href="https://github.com/maobaochang" target="_blank" rel="noopener">@maobaochang</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <a href="#hero" class="footer-logo">MAO BAO CHANG</a>
+                <div class="footer-links">
+                    <a href="#about">关于</a>
+                    <a href="#works">作品</a>
+                    <a href="#contact">联系</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 毛宝昌. All rights reserved.</p>
+                <a href="admin.html" class="admin-entry" title="管理后台">⚙</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

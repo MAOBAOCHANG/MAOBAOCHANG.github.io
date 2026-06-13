@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站管理 · 毛宝昌</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+            <h1>网站管理登录</h1>
+            <p class="login-hint">请输入管理密码</p>
+            <form class="login-form" id="loginForm">
+                <input type="password" id="passwordInput" placeholder="请输入密码" autocomplete="off" />
+                <button type="submit" class="btn-login">进入管理</button>
+                <p class="login-error" id="loginError">密码错误，请重试</p>
+            </form>
+            <a href="index.html" class="back-link">← 返回网站首页</a>
+        </div>
+    </div>
+
+    <!-- 管理界面 -->
+    <div class="admin-screen hidden" id="adminScreen">
+        <nav class="admin-nav">
+            <div class="admin-nav-left">
+                <span class="admin-logo">管理面板</span>
+                <span class="admin-badge">毛宝昌 · 个人网站</span>
+            </div>
+            <div class="admin-nav-right">
+                <a href="index.html" target="_blank" class="btn-preview">预览网站</a>
+                <button class="btn-logout" id="btnLogout">退出登录</button>
+            </div>
+        </nav>
+
+        <div class="admin-container">
+            <!-- 侧边栏 -->
+            <aside class="admin-sidebar">
+                <button class="sidebar-btn active" data-tab="hero">首页信息</button>
+                <button class="sidebar-btn" data-tab="about">关于我</button>
+                <button class="sidebar-btn" data-tab="works">作品管理</button>
+                <button class="sidebar-btn" data-tab="contact">联系信息</button>
+                <button class="sidebar-btn" data-tab="avatar">头像设置</button>
+                <button class="sidebar-btn" data-tab="export">导出数据</button>
+            </aside>
+
+            <!-- 主内容区 -->
+            <main class="admin-main">
+
+                <!-- 首页信息 -->
+                <div class="tab-content active" id="tab-hero">
+                    <h2>首页信息</h2>
+                    <div class="form-group">
+                        <label>问候语</label>
+                        <input type="text" id="edit-greeting" placeholder="你好，我是" />
+                    </div>
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="edit-name" placeholder="毛宝昌" />
+                    </div>
+                    <div class="form-group">
+                        <label>打字机标签（每行一个，轮流显示）</label>
+                        <textarea id="edit-typing" rows="4" placeholder="每行一个标签"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>个人简介</label>
+                        <textarea id="edit-hero-desc" rows="3"></textarea>
+                    </div>
+                    <button class="btn-save" onclick="saveHero()">保存首页信息</button>
+                </div>
+
+                <!-- 关于我 -->
+                <div class="tab-content" id="tab-about">
+                    <h2>关于我</h2>
+                    <div class="form-group">
+                        <label>正文段落（支持 HTML，如 &lt;strong&gt;加粗&lt;/strong&gt;）</label>
+                        <textarea id="edit-about-text" rows="10"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 1 — 数字</label>
+                        <input type="number" id="edit-stat1-num" />
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 1 — 标签</label>
+                        <input type="text" id="edit-stat1-label" />
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 2 — 数字</label>
+                        <input type="number" id="edit-stat2-num" />
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 2 — 标签</label>
+                        <input type="text" id="edit-stat2-label" />
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 3 — 数字</label>
+                        <input type="number" id="edit-stat3-num" />
+                    </div>
+                    <div class="form-group">
+                        <label>统计卡片 3 — 标签</label>
+                        <input type="text" id="edit-stat3-label" />
+                    </div>
+                    <button class="btn-save" onclick="saveAbout()">保存关于信息</button>
+                </div>
+
+                <!-- 作品管理 -->
+                <div class="tab-content" id="tab-works">
+                    <h2>作品管理</h2>
+                    <button class="btn-add" onclick="showWorkForm()">+ 添加新作品</button>
+
+                    <div class="work-form hidden" id="workForm">
+                        <h3 id="workFormTitle">添加作品</h3>
+                        <div class="form-group">
+                            <label>作品标题</label>
+                            <input type="text" id="work-title-input" />
+                        </div>
+                        <div class="form-group">
+                            <label>分类</label>
+                            <select id="work-category-input">
+                                <option value="web">Web 开发</option>
+                                <option value="design">设计</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>描述</label>
+                            <textarea id="work-desc-input" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>技术标签（用逗号分隔）</label>
+                            <input type="text" id="work-tech-input" placeholder="HTML5, CSS3, JavaScript" />
+                        </div>
+                        <div class="form-group">
+                            <label>图片（上传或粘贴链接）</label>
+                            <input type="file" id="work-image-file" accept="image/*" onchange="previewWorkImage(event)" />
+                            <input type="text" id="work-image-url" placeholder="或粘贴图片链接" style="margin-top:0.5rem" />
+                            <div id="workImagePreview" class="image-preview"></div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-save" onclick="saveWork()">保存作品</button>
+                            <button class="btn-cancel" onclick="cancelWorkForm()">取消</button>
+                        </div>
+                    </div>
+
+                    <div class="works-list" id="worksList">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 联系信息 -->
+                <div class="tab-content" id="tab-contact">
+                    <h2>联系信息</h2>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="edit-email" />
+                    </div>
+                    <div class="form-group">
+                        <label>微信</label>
+                        <input type="text" id="edit-wechat" />
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub 用户名</label>
+                        <input type="text" id="edit-github" />
+                    </div>
+                    <button class="btn-save" onclick="saveContact()">保存联系信息</button>
+                </div>
+
+                <!-- 头像设置 -->
+                <div class="tab-content" id="tab-avatar">
+                    <h2>头像设置</h2>
+                    <p class="tab-desc">上传你的个人照片，替换首页的 MBC 字母占位。</p>
+                    <div class="avatar-upload-area">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <span>MBC</span>
+                        </div>
+                        <input type="file" id="avatarFileInput" accept="image/*" onchange="previewAvatar(event)" />
+                        <label for="avatarFileInput" class="btn-upload">选择照片</label>
+                        <p class="upload-hint">建议使用正方形照片，尺寸不小于 400×400</p>
+                    </div>
+                    <button class="btn-save" onclick="saveAvatar()">保存头像</button>
+                </div>
+
+                <!-- 导出数据 -->
+                <div class="tab-content" id="tab-export">
+                    <h2>导出数据</h2>
+                    <p class="tab-desc">将编辑好的数据导出，替换到网站文件中。</p>
+                    <div class="export-section">
+                        <h3>方式一：下载数据文件</h3>
+                        <p>点击下方按钮，下载 <code>site-data.json</code>，将其放到网站根目录。</p>
+                        <button class="btn-save" onclick="exportJSON()">下载 site-data.json</button>
+                    </div>
+                    <div class="export-section">
+                        <h3>方式二：复制配置代码</h3>
+                        <p>复制下方生成的 JavaScript 配置代码，粘贴到 <code>site-config.js</code> 文件中。</p>
+                        <textarea id="exportCode" rows="15" readonly></textarea>
+                        <button class="btn-save" onclick="copyExportCode()">复制到剪贴板</button>
+                    </div>
+                    <div class="export-section">
+                        <h3>方式三：直接生成 index.html</h3>
+                        <p>点击下方按钮，自动生成包含最新数据的 <code>index.html</code>，下载后直接替换原文件。</p>
+                        <button class="btn-save" onclick="exportFullHTML()">下载最新 index.html</button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
