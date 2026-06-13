@@ -1,2 +1,9 @@
 markdown: kramdown
-exclude: []
+theme: null
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+sass:
+  style: compressed
+exclude:
+  - README.md
