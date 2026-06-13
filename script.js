@@ -145,18 +145,23 @@ document.addEventListener('DOMContentLoaded', () => {
     initCountUp();
     initFilter();
     initSmoothScroll();
+    initWorkModal();
 });
 
-/* --- 纸飞机光标 --- */
+/* --- 自定义光标 --- */
 function initCursor() {
     const cursor = document.querySelector('.cursor');
-    if (!cursor) return;
+    const follower = document.querySelector('.cursor-follower');
+    
+    if (!cursor || !follower) return;
 
     // 显示光标
     cursor.style.display = 'block';
+    follower.style.display = 'block';
     
     let mouseX = 0, mouseY = 0;
     let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
+    let followerX = window.innerWidth / 2, followerY = window.innerHeight / 2;
 
     // 隐藏默认光标
     document.body.style.cursor = 'none';
@@ -174,25 +179,26 @@ function initCursor() {
     interactiveEls.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hover');
+            follower.classList.add('hover');
         });
         el.addEventListener('mouseleave', () => {
             cursor.classList.remove('hover');
+            follower.classList.remove('hover');
         });
     });
 
     function animate() {
-        // 纸飞机光标：平滑跟随
-        cursorX += (mouseX - cursorX) * 0.15;
-        cursorY += (mouseY - cursorY) * 0.15;
-        
-        // 计算旋转角度（朝向移动方向）
-        const deltaX = mouseX - cursorX;
-        const deltaY = mouseY - cursorY;
-        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 45;
-        
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        cursor.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+        // 光标小球：快速跟随
+        cursorX += (mouseX - cursorX) * 0.5;
+        cursorY += (mouseY - cursorY) * 0.5;
+        cursor.style.left = cursorX - 4 + 'px';
+        cursor.style.top = cursorY - 4 + 'px';
+
+        // 光标跟随圈：缓慢跟随
+        followerX += (mouseX - followerX) * 0.15;
+        followerY += (mouseY - followerY) * 0.15;
+        follower.style.left = followerX - 16 + 'px';
+        follower.style.top = followerY - 16 + 'px';
 
         requestAnimationFrame(animate);
     }
@@ -387,4 +393,53 @@ function initSmoothScroll() {
             }
         });
     });
+}
+
+/* --- 作品详情弹窗 --- */
+function initWorkModal() {
+    // 点击作品卡片打开弹窗
+    document.querySelectorAll('.work-card:not(.work-card-empty)').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+            openModal(card);
+        });
+    });
+
+    // 关闭按钮
+    const closeBtn = document.getElementById('modalClose');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    // 点击背景关闭
+    const backdrop = document.getElementById('modalBackdrop');
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+
+    // ESC 关闭
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+}
+
+function openModal(card) {
+    const modal = document.getElementById('workModal');
+    const title = card.getAttribute('data-title') || '';
+    const desc = card.getAttribute('data-desc') || '';
+    const tag = card.getAttribute('data-tag') || '';
+    let tech = [];
+    try { tech = JSON.parse(card.getAttribute('data-tech') || '[]'); } catch(e) {}
+
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDesc').textContent = desc;
+    document.getElementById('modalTag').textContent = tag;
+
+    const techContainer = document.getElementById('modalTech');
+    techContainer.innerHTML = tech.map(t => '<span>' + t + '</span>').join('');
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('workModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
 }

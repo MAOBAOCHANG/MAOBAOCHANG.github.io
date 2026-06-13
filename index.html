@@ -12,12 +12,9 @@
     </style>
 </head>
 <body>
-    <!-- 纸飞机光标 -->
-    <div class="cursor">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-        </svg>
-    </div>
+    <!-- 自定义光标 -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
     <!-- 管理入口 - 固定在右下角 -->
     <a href="admin.html" class="floating-admin-btn" title="管理后台">
@@ -146,7 +143,7 @@
 
             <div class="works-grid">
                 <!-- 作品 1 -->
-                <article class="work-card" data-category="web">
+                <article class="work-card" data-category="web" data-title="个人品牌网站" data-desc="极简风格的个人主页，支持暗色模式与响应式布局，注重交互动效与用户体验。" data-tech='["HTML5","CSS3","JavaScript"]' data-tag="Web 开发">
                     <div class="work-card-image">
                         <div class="work-placeholder">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -171,7 +168,7 @@
                 </article>
 
                 <!-- 作品 2 -->
-                <article class="work-card" data-category="web">
+                <article class="work-card" data-category="web" data-title="创意作品集" data-desc="交互式作品展示平台，使用流畅的过渡动画与网格布局，让作品呈现更具视觉冲击力。" data-tech='["HTML5","CSS3","JavaScript"]' data-tag="Web 开发">
                     <div class="work-card-image">
                         <div class="work-placeholder">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -196,7 +193,7 @@
                 </article>
 
                 <!-- 作品 3 -->
-                <article class="work-card" data-category="design">
+                <article class="work-card" data-category="design" data-title="UI 设计系统" data-desc="一套简洁统一的组件设计规范，包含配色方案、字体层级与间距系统，确保视觉一致性。" data-tech='["Figma","Design System"]' data-tag="设计">
                     <div class="work-card-image">
                         <div class="work-placeholder">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -221,7 +218,7 @@
                 </article>
 
                 <!-- 作品 4 -->
-                <article class="work-card" data-category="other">
+                <article class="work-card" data-category="other" data-title="创意实验" data-desc="探索前沿技术的实验性项目，不断尝试新的交互方式与视觉表达，突破常规边界。" data-tech='["实验","创意"]' data-tag="其他">
                     <div class="work-card-image">
                         <div class="work-placeholder">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -320,6 +317,19 @@
             </div>
         </div>
     </footer>
+
+    <!-- 作品详情弹窗 -->
+    <div class="work-modal" id="workModal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <span class="modal-tag" id="modalTag"></span>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-desc" id="modalDesc"></p>
+            <div class="modal-tech" id="modalTech"></div>
+            <a href="#contact" class="btn btn-primary modal-btn" onclick="closeModal()">联系我</a>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
