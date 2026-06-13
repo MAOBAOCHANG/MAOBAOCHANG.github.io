@@ -147,23 +147,26 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
 });
 
-/* --- 自定义光标 --- */
+/* --- 纸飞机光标 --- */
 function initCursor() {
     const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
-    
-    if (!cursor || !follower) return;
+    if (!cursor) return;
 
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    let followerX = 0, followerY = 0;
+
+    // 隐藏默认光标
+    document.body.style.cursor = 'none';
+    document.querySelectorAll('a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card').forEach(el => {
+        el.style.cursor = 'none';
+    });
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
     });
 
-    // 可交互元素
+    // 可交互元素悬停效果
     const interactiveElements = document.querySelectorAll(
         'a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card'
     );
@@ -171,26 +174,25 @@ function initCursor() {
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hover');
-            follower.classList.add('hover');
         });
         el.addEventListener('mouseleave', () => {
             cursor.classList.remove('hover');
-            follower.classList.remove('hover');
         });
     });
 
     function animate() {
-        // 光标小球：快速跟随
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        cursor.style.left = cursorX - 4 + 'px';
-        cursor.style.top = cursorY - 4 + 'px';
-
-        // 光标跟随圈：缓慢跟随
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-        follower.style.left = followerX - 16 + 'px';
-        follower.style.top = followerY - 16 + 'px';
+        // 纸飞机光标：平滑跟随
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        
+        // 计算旋转角度（朝向移动方向）
+        const deltaX = mouseX - cursorX;
+        const deltaY = mouseY - cursorY;
+        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 45;
+        
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        cursor.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
 
         requestAnimationFrame(animate);
     }
