@@ -266,15 +266,13 @@ function showWorkForm(workId) {
         if (type === 'video') {
             if (work.video) {
                 const preview = document.getElementById('workVideoPreview');
-                if (work.video.startsWith('data:')) {
-                    preview.innerHTML = '<video src="' + work.video + '" controls style="max-width:200px;max-height:120px;"></video>';
-                } else {
-                    preview.innerHTML = '<video src="' + work.video + '" controls style="max-width:200px;max-height:120px;"></video>';
+                const bvMatch = work.video.match(/(BV\w+)/);
+                const bvId = bvMatch ? bvMatch[1] : '';
+                if (bvId) {
+                    preview.innerHTML = '<iframe src="https://player.bilibili.com/player.html?bvid=' + bvId + '&autoplay=0" style="width:200px;height:120px;border:none;border-radius:8px;" allowfullscreen></iframe>';
+                    preview.classList.add('show');
                 }
-                preview.classList.add('show');
-                if (!work.video.startsWith('data:')) {
-                    setVal('work-video-url', work.video);
-                }
+                setVal('work-video-url', work.video);
             }
         } else {
             const preview = document.getElementById('workImagePreview');
@@ -326,14 +324,15 @@ function saveWork() {
 
     if (type === 'video') {
         video = val('work-video-url').trim();
-        if (!video) {
-            const preview = document.getElementById('workVideoPreview');
-            const vid = preview.querySelector('video');
-            if (vid) video = vid.src;
+        // 提取 B站 BV 号
+        if (video) {
+            const bvMatch = video.match(/(BV\w+)/);
+            if (bvMatch) {
+                video = 'https://www.bilibili.com/video/' + bvMatch[1];
+            }
         }
-        // 视频太大提示
-        if (video.startsWith('data:') && video.length > 10 * 1024 * 1024) {
-            alert('视频文件太大（超过 10MB），建议使用视频链接（如 B站、腾讯视频等外链）。');
+        if (!video) {
+            alert('请粘贴 B站视频链接');
             return;
         }
     } else {
@@ -404,21 +403,44 @@ function previewWorkImage(event) {
 }
 
 function previewWorkVideo(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 20 * 1024 * 1024) {
-        alert('视频文件超过 20MB，建议压缩后上传，或使用视频链接。');
-        return;
-    }
-    const reader = new FileReader();
-    reader.onload = function (e) {
+    // 现在只支持 B站链接，此函数保留接口备用
+    const url = val('work-video-url').trim();
+    if (!url) return;
+    const bvMatch = url.match(/(BV\w+)/);
+    if (bvMatch) {
+        const bvId = bvMatch[1];
         const preview = document.getElementById('workVideoPreview');
-        preview.innerHTML = '<video src="' + e.target.result + '" controls style="max-width:200px;max-height:120px;"></video>';
+        preview.innerHTML = '<iframe src="https://player.bilibili.com/player.html?bvid=' + bvId + '&autoplay=0" style="width:200px;height:120px;border:none;border-radius:8px;" allowfullscreen></iframe>';
         preview.classList.add('show');
-        setVal('work-video-url', '');
-    };
-    reader.readAsDataURL(file);
+    } else {
+        alert('请输入有效的 B站视频链接（包含 BV 号）');
+    }
 }
+
+// 实时预览 B站链接
+document.addEventListener('DOMContentLoaded', function() {
+    const videoUrlInput = document.getElementById('work-video-url');
+    if (videoUrlInput) {
+        videoUrlInput.addEventListener('input', function() {
+            const url = this.value.trim();
+            if (!url) {
+                const preview = document.getElementById('workVideoPreview');
+                if (preview) {
+                    preview.innerHTML = '';
+                    preview.classList.remove('show');
+                }
+                return;
+            }
+            const bvMatch = url.match(/(BV\w+)/);
+            if (bvMatch) {
+                const bvId = bvMatch[1];
+                const preview = document.getElementById('workVideoPreview');
+                preview.innerHTML = '<iframe src="https://player.bilibili.com/player.html?bvid=' + bvId + '&autoplay=0" style="width:200px;height:120px;border:none;border-radius:8px;" allowfullscreen></iframe>';
+                preview.classList.add('show');
+            }
+        });
+    }
+});
 
 function previewAvatar(event) {
     const file = event.target.files[0];
@@ -505,7 +527,13 @@ function generateHTML(data) {
         const isVideo = (w.type || 'image') === 'video';
         let mediaHTML = '';
         if (isVideo && w.video) {
-            mediaHTML = '<video src="' + w.video + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>';
+            const bvMatch = w.video.match(/(BV\w+)/);
+            const bvId = bvMatch ? bvMatch[1] : '';
+            if (bvId) {
+                mediaHTML = '<div class="work-video-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;font-size:0.9rem;">🎬 视频作品（点击查看）</div>';
+            } else {
+                mediaHTML = '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+            }
         } else if (w.image) {
             mediaHTML = '<img src="' + w.image + '" alt="' + w.title + '" />';
         } else {

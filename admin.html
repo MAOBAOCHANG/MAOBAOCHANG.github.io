@@ -152,9 +152,9 @@
                             <div id="workImagePreview" class="image-preview"></div>
                         </div>
                         <div class="form-group hidden" id="workVideoGroup">
-                            <label>视频（上传或粘贴视频链接）</label>
-                            <input type="file" id="work-video-file" accept="video/*" onchange="previewWorkVideo(event)" />
-                            <input type="text" id="work-video-url" placeholder="或粘贴视频链接（支持 mp4/webm 直链）" style="margin-top:0.5rem" />
+                            <label>视频（粘贴 B站视频链接）</label>
+                            <input type="text" id="work-video-url" placeholder="粘贴 B站视频链接，如 https://www.bilibili.com/video/BV1xx411c7mD" style="margin-top:0.5rem" />
+                            <p class="upload-hint">支持 B站视频链接，粘贴后会在作品详情弹窗中嵌入播放。获取方式：B站视频页面 → 点击「分享」→ 复制链接。</p>
                             <div id="workVideoPreview" class="image-preview"></div>
                         </div>
                         <div class="form-actions">

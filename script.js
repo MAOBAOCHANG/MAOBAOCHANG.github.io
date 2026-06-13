@@ -89,7 +89,13 @@ function applySiteData() {
                 const isVideo = (w.type || 'image') === 'video';
                 let mediaHTML = '';
                 if (isVideo && w.video) {
-                    mediaHTML = '<video src="' + w.video + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>';
+                    const bvMatch = w.video.match(/(BV\w+)/);
+                    const bvId = bvMatch ? bvMatch[1] : '';
+                    if (bvId) {
+                        mediaHTML = '<div class="work-video-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;font-size:0.9rem;border-radius:12px;">🎬 视频作品（点击查看）</div>';
+                    } else {
+                        mediaHTML = '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+                    }
                 } else if (w.image) {
                     mediaHTML = '<img src="' + w.image + '" alt="' + w.title + '" />';
                 } else {
@@ -433,17 +439,20 @@ function openModal(card) {
     const techContainer = document.getElementById('modalTech');
     techContainer.innerHTML = tech.map(t => '<span>' + t + '</span>').join('');
 
-    // 视频作品：在弹窗中嵌入视频播放器
+    // 视频作品：在弹窗中嵌入 B站播放器
     let videoContainer = document.getElementById('modalVideo');
     if (type === 'video' && video) {
         if (!videoContainer) {
             videoContainer = document.createElement('div');
             videoContainer.id = 'modalVideo';
-            videoContainer.style.cssText = 'margin-bottom:1rem;border-radius:12px;overflow:hidden;';
             const modalContent = modal.querySelector('.modal-content');
             modalContent.insertBefore(videoContainer, document.getElementById('modalTag'));
         }
-        videoContainer.innerHTML = '<video src="' + video + '" controls autoplay style="width:100%;max-height:300px;object-fit:contain;background:#000;border-radius:12px;"></video>';
+        const bvMatch = video.match(/(BV\w+)/);
+        const bvId = bvMatch ? bvMatch[1] : '';
+        if (bvId) {
+            videoContainer.innerHTML = '<iframe src="https://player.bilibili.com/player.html?bvid=' + bvId + '&autoplay=0&danmaku=0" style="width:100%;height:300px;border:none;border-radius:12px;" allowfullscreen allow="autoplay"></iframe>';
+        }
         videoContainer.style.display = 'block';
     } else {
         if (videoContainer) videoContainer.style.display = 'none';
@@ -455,9 +464,9 @@ function openModal(card) {
 
 function closeModal() {
     const modal = document.getElementById('workModal');
-    // 暂停视频
-    const video = modal.querySelector('#modalVideo video');
-    if (video) video.pause();
+    // 清除视频 iframe（停止播放）
+    const videoContainer = document.getElementById('modalVideo');
+    if (videoContainer) videoContainer.innerHTML = '';
     modal.classList.remove('active');
     document.body.style.overflow = '';
 }
