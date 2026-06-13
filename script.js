@@ -152,12 +152,16 @@ function initCursor() {
     const cursor = document.querySelector('.cursor');
     if (!cursor) return;
 
+    // 显示光标
+    cursor.style.display = 'block';
+    
     let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
+    let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
 
     // 隐藏默认光标
     document.body.style.cursor = 'none';
-    document.querySelectorAll('a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card').forEach(el => {
+    const interactiveEls = document.querySelectorAll('a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card');
+    interactiveEls.forEach(el => {
         el.style.cursor = 'none';
     });
 
@@ -167,11 +171,7 @@ function initCursor() {
     });
 
     // 可交互元素悬停效果
-    const interactiveElements = document.querySelectorAll(
-        'a, button, .btn, .filter-btn, .work-card, .contact-card, .stat-card'
-    );
-
-    interactiveElements.forEach(el => {
+    interactiveEls.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hover');
         });
