@@ -572,6 +572,12 @@ function generateHTML(data) {
         '            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>\n' +
         '        </svg>\n' +
         '    </div>\n\n' +
+        '    <!-- 管理入口 - 固定在右下角 -->\n' +
+        '    <a href="admin.html" class="floating-admin-btn" title="管理后台">\n' +
+        '        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\n' +
+        '            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>\n' +
+        '        </svg>\n' +
+        '    </a>\n\n' +
         '    <nav class="navbar" id="navbar">\n' +
         '        <div class="nav-container">\n' +
         '            <a href="#hero" class="nav-logo">' + data.hero.name + '</a>\n' +
