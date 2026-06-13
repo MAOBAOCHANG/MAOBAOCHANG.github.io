@@ -566,8 +566,12 @@ function generateHTML(data) {
         '    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">\n' +
         '</head>\n' +
         '<body>\n' +
-        '    <div class="cursor"></div>\n' +
-        '    <div class="cursor-follower"></div>\n\n' +
+        '    <!-- 纸飞机光标 -->\n' +
+        '    <div class="cursor-plane" id="cursorPlane">\n' +
+        '        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">\n' +
+        '            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>\n' +
+        '        </svg>\n' +
+        '    </div>\n\n' +
         '    <nav class="navbar" id="navbar">\n' +
         '        <div class="nav-container">\n' +
         '            <a href="#hero" class="nav-logo">' + data.hero.name + '</a>\n' +
