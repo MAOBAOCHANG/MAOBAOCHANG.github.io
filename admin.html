@@ -139,10 +139,23 @@
                             <input type="text" id="work-tech-input" placeholder="HTML5, CSS3, JavaScript" />
                         </div>
                         <div class="form-group">
+                            <label>作品类型</label>
+                            <select id="work-type-input" onchange="toggleWorkMediaType()">
+                                <option value="image">图片作品</option>
+                                <option value="video">视频作品</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="workImageGroup">
                             <label>图片（上传或粘贴链接）</label>
                             <input type="file" id="work-image-file" accept="image/*" onchange="previewWorkImage(event)" />
                             <input type="text" id="work-image-url" placeholder="或粘贴图片链接" style="margin-top:0.5rem" />
                             <div id="workImagePreview" class="image-preview"></div>
+                        </div>
+                        <div class="form-group hidden" id="workVideoGroup">
+                            <label>视频（上传或粘贴视频链接）</label>
+                            <input type="file" id="work-video-file" accept="video/*" onchange="previewWorkVideo(event)" />
+                            <input type="text" id="work-video-url" placeholder="或粘贴视频链接（支持 mp4/webm 直链）" style="margin-top:0.5rem" />
+                            <div id="workVideoPreview" class="image-preview"></div>
                         </div>
                         <div class="form-actions">
                             <button class="btn-save" onclick="saveWork()">保存作品</button>

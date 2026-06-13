@@ -86,12 +86,19 @@ function applySiteData() {
         const worksGrid = document.querySelector('.works-grid');
         if (worksGrid) {
             const worksHTML = siteData.works.map(w => {
-                const imgHTML = w.image
-                    ? '<img src="' + w.image + '" alt="' + w.title + '" />'
-                    : '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+                const isVideo = (w.type || 'image') === 'video';
+                let mediaHTML = '';
+                if (isVideo && w.video) {
+                    mediaHTML = '<video src="' + w.video + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>';
+                } else if (w.image) {
+                    mediaHTML = '<img src="' + w.image + '" alt="' + w.title + '" />';
+                } else {
+                    mediaHTML = '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+                }
                 const techHTML = w.tech.map(t => '<span>' + t + '</span>').join('');
-                return '<article class="work-card" data-category="' + w.category + '">' +
-                    '<div class="work-card-image">' + imgHTML +
+                const typeAttr = ' data-type="' + (w.type || 'image') + '"' + (isVideo ? ' data-video="' + (w.video || '') + '"' : '');
+                return '<article class="work-card" data-category="' + w.category + '"' + typeAttr + '>' +
+                    '<div class="work-card-image">' + mediaHTML +
                         '<div class="work-overlay"><span class="work-view">查看详情</span></div></div>' +
                     '<div class="work-card-info">' +
                         '<span class="work-tag">' + w.tag + '</span>' +
@@ -414,6 +421,8 @@ function openModal(card) {
     const title = card.getAttribute('data-title') || '';
     const desc = card.getAttribute('data-desc') || '';
     const tag = card.getAttribute('data-tag') || '';
+    const type = card.getAttribute('data-type') || 'image';
+    const video = card.getAttribute('data-video') || '';
     let tech = [];
     try { tech = JSON.parse(card.getAttribute('data-tech') || '[]'); } catch(e) {}
 
@@ -424,12 +433,31 @@ function openModal(card) {
     const techContainer = document.getElementById('modalTech');
     techContainer.innerHTML = tech.map(t => '<span>' + t + '</span>').join('');
 
+    // 视频作品：在弹窗中嵌入视频播放器
+    let videoContainer = document.getElementById('modalVideo');
+    if (type === 'video' && video) {
+        if (!videoContainer) {
+            videoContainer = document.createElement('div');
+            videoContainer.id = 'modalVideo';
+            videoContainer.style.cssText = 'margin-bottom:1rem;border-radius:12px;overflow:hidden;';
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.insertBefore(videoContainer, document.getElementById('modalTag'));
+        }
+        videoContainer.innerHTML = '<video src="' + video + '" controls autoplay style="width:100%;max-height:300px;object-fit:contain;background:#000;border-radius:12px;"></video>';
+        videoContainer.style.display = 'block';
+    } else {
+        if (videoContainer) videoContainer.style.display = 'none';
+    }
+
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
     const modal = document.getElementById('workModal');
+    // 暂停视频
+    const video = modal.querySelector('#modalVideo video');
+    if (video) video.pause();
     modal.classList.remove('active');
     document.body.style.overflow = '';
 }

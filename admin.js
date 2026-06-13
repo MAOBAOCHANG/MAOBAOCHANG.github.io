@@ -62,7 +62,9 @@ const defaultData = {
             tag: '其他',
             desc: '探索前沿技术的实验性项目，不断尝试新的交互方式与视觉表达，突破常规边界。',
             tech: ['实验', '创意'],
-            image: ''
+            type: 'image',
+            image: '',
+            video: ''
         }
     ],
     contact: {
@@ -219,10 +221,35 @@ function val(id) {
 }
 
 // ============ 作品管理 ============
+function toggleWorkMediaType() {
+    const type = val('work-type-input');
+    const imageGroup = document.getElementById('workImageGroup');
+    const videoGroup = document.getElementById('workVideoGroup');
+    if (type === 'video') {
+        imageGroup.classList.add('hidden');
+        videoGroup.classList.remove('hidden');
+    } else {
+        imageGroup.classList.remove('hidden');
+        videoGroup.classList.add('hidden');
+    }
+}
+
 function showWorkForm(workId) {
     const form = document.getElementById('workForm');
     form.classList.remove('hidden');
     editingWorkId = workId || null;
+
+    // 重置表单
+    setVal('work-type-input', 'image');
+    toggleWorkMediaType();
+    document.getElementById('work-image-file').value = '';
+    document.getElementById('work-video-file').value = '';
+    setVal('work-image-url', '');
+    setVal('work-video-url', '');
+    document.getElementById('workImagePreview').innerHTML = '';
+    document.getElementById('workImagePreview').classList.remove('show');
+    document.getElementById('workVideoPreview').innerHTML = '';
+    document.getElementById('workVideoPreview').classList.remove('show');
 
     if (workId) {
         const work = siteData.works.find(w => w.id === workId);
@@ -232,14 +259,35 @@ function showWorkForm(workId) {
         setVal('work-category-input', work.category);
         setVal('work-desc-input', work.desc);
         setVal('work-tech-input', work.tech.join(', '));
-        const preview = document.getElementById('workImagePreview');
-        if (work.image) {
-            preview.innerHTML = '<img src="' + work.image + '" />';
-            preview.classList.add('show');
+        const type = work.type || 'image';
+        setVal('work-type-input', type);
+        toggleWorkMediaType();
+
+        if (type === 'video') {
+            if (work.video) {
+                const preview = document.getElementById('workVideoPreview');
+                if (work.video.startsWith('data:')) {
+                    preview.innerHTML = '<video src="' + work.video + '" controls style="max-width:200px;max-height:120px;"></video>';
+                } else {
+                    preview.innerHTML = '<video src="' + work.video + '" controls style="max-width:200px;max-height:120px;"></video>';
+                }
+                preview.classList.add('show');
+                if (!work.video.startsWith('data:')) {
+                    setVal('work-video-url', work.video);
+                }
+            }
+        } else {
+            const preview = document.getElementById('workImagePreview');
+            if (work.image) {
+                preview.innerHTML = '<img src="' + work.image + '" />';
+                preview.classList.add('show');
+                if (!work.image.startsWith('data:')) {
+                    setVal('work-image-url', work.image);
+                }
+            }
         }
     } else {
         document.getElementById('workFormTitle').textContent = '添加作品';
-        cancelWorkForm();
     }
 }
 
@@ -250,12 +298,17 @@ function cancelWorkForm() {
     setVal('work-category-input', 'web');
     setVal('work-desc-input', '');
     setVal('work-tech-input', '');
+    setVal('work-type-input', 'image');
     document.getElementById('work-image-file').value = '';
+    document.getElementById('work-video-file').value = '';
     setVal('work-image-url', '');
-    const preview = document.getElementById('workImagePreview');
-    preview.innerHTML = '';
-    preview.classList.remove('show');
+    setVal('work-video-url', '');
+    document.getElementById('workImagePreview').innerHTML = '';
+    document.getElementById('workImagePreview').classList.remove('show');
+    document.getElementById('workVideoPreview').innerHTML = '';
+    document.getElementById('workVideoPreview').classList.remove('show');
     editingWorkId = null;
+    toggleWorkMediaType();
 }
 
 function saveWork() {
@@ -263,25 +316,42 @@ function saveWork() {
     if (!title) { alert('请输入作品标题'); return; }
 
     const category = val('work-category-input');
+    const type = val('work-type-input');
     const tagMap = { web: 'Web 开发', design: '设计', other: '其他' };
     const desc = val('work-desc-input').trim();
     const tech = val('work-tech-input').split(',').map(s => s.trim()).filter(s => s);
-    const imageUrl = val('work-image-url').trim();
 
-    let image = imageUrl;
-    if (!image) {
-        const preview = document.getElementById('workImagePreview');
-        const img = preview.querySelector('img');
-        if (img) image = img.src;
+    let image = '';
+    let video = '';
+
+    if (type === 'video') {
+        video = val('work-video-url').trim();
+        if (!video) {
+            const preview = document.getElementById('workVideoPreview');
+            const vid = preview.querySelector('video');
+            if (vid) video = vid.src;
+        }
+        // 视频太大提示
+        if (video.startsWith('data:') && video.length > 10 * 1024 * 1024) {
+            alert('视频文件太大（超过 10MB），建议使用视频链接（如 B站、腾讯视频等外链）。');
+            return;
+        }
+    } else {
+        image = val('work-image-url').trim();
+        if (!image) {
+            const preview = document.getElementById('workImagePreview');
+            const img = preview.querySelector('img');
+            if (img) image = img.src;
+        }
     }
 
     if (editingWorkId) {
         const idx = siteData.works.findIndex(w => w.id === editingWorkId);
         if (idx !== -1) {
-            siteData.works[idx] = { ...siteData.works[idx], title, category, tag: tagMap[category], desc, tech, image };
+            siteData.works[idx] = { ...siteData.works[idx], title, category, tag: tagMap[category], desc, tech, type, image, video };
         }
     } else {
-        siteData.works.push({ id: Date.now(), title, category, tag: tagMap[category], desc, tech, image });
+        siteData.works.push({ id: Date.now(), title, category, tag: tagMap[category], desc, tech, type, image, video });
     }
 
     saveData();
@@ -302,12 +372,16 @@ function renderWorksList() {
     const container = document.getElementById('worksList');
     if (!container) return;
     container.innerHTML = siteData.works.map(w => {
-        const thumb = w.image
-            ? '<img src="' + w.image + '" />'
-            : '<span style="font-size:1.5rem;">📄</span>';
+        const isVideo = (w.type || 'image') === 'video';
+        const thumb = isVideo
+            ? '<span style="font-size:1.5rem;">🎬</span>'
+            : (w.image
+                ? '<img src="' + w.image + '" />'
+                : '<span style="font-size:1.5rem;">📄</span>');
+        const typeBadge = isVideo ? '<span style="background:#ef4444;color:#fff;font-size:0.7rem;padding:2px 6px;border-radius:4px;margin-left:6px;">视频</span>' : '';
         return '<div class="work-item">' +
             '<div class="work-item-thumb">' + thumb + '</div>' +
-            '<div class="work-item-info"><h4>' + w.title + '</h4><span>' + w.tag + '</span></div>' +
+            '<div class="work-item-info"><h4>' + w.title + typeBadge + '</h4><span>' + w.tag + '</span></div>' +
             '<div class="work-item-actions">' +
                 '<button class="btn-edit" onclick="showWorkForm(' + w.id + ')">编辑</button>' +
                 '<button class="btn-delete" onclick="deleteWork(' + w.id + ')">删除</button>' +
@@ -315,7 +389,7 @@ function renderWorksList() {
     }).join('');
 }
 
-// ============ 图片上传预览 ============
+// ============ 图片/视频上传预览 ============
 function previewWorkImage(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -325,6 +399,23 @@ function previewWorkImage(event) {
         preview.innerHTML = '<img src="' + e.target.result + '" />';
         preview.classList.add('show');
         setVal('work-image-url', '');
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewWorkVideo(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) {
+        alert('视频文件超过 20MB，建议压缩后上传，或使用视频链接。');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const preview = document.getElementById('workVideoPreview');
+        preview.innerHTML = '<video src="' + e.target.result + '" controls style="max-width:200px;max-height:120px;"></video>';
+        preview.classList.add('show');
+        setVal('work-video-url', '');
     };
     reader.readAsDataURL(file);
 }
@@ -411,12 +502,19 @@ function downloadBlob(blob, filename) {
 function generateHTML(data) {
     const typingArr = JSON.stringify(data.hero.typing);
     const worksHTML = data.works.map(w => {
-        const imgHTML = w.image
-            ? '<img src="' + w.image + '" alt="' + w.title + '" />'
-            : '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+        const isVideo = (w.type || 'image') === 'video';
+        let mediaHTML = '';
+        if (isVideo && w.video) {
+            mediaHTML = '<video src="' + w.video + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>';
+        } else if (w.image) {
+            mediaHTML = '<img src="' + w.image + '" alt="' + w.title + '" />';
+        } else {
+            mediaHTML = '<div class="work-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
+        }
         const techHTML = w.tech.map(t => '<span>' + t + '</span>').join('');
-        return '<article class="work-card" data-category="' + w.category + '">' +
-            '<div class="work-card-image">' + imgHTML +
+        const typeAttr = ' data-type="' + (w.type || 'image') + '"' + (isVideo ? ' data-video="' + (w.video || '') + '"' : '');
+        return '<article class="work-card" data-category="' + w.category + '"' + typeAttr + '>' +
+            '<div class="work-card-image">' + mediaHTML +
                 '<div class="work-overlay"><span class="work-view">查看详情</span></div></div>' +
             '<div class="work-card-info">' +
                 '<span class="work-tag">' + w.tag + '</span>' +
